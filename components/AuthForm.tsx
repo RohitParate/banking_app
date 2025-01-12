@@ -23,6 +23,7 @@ import CustomInput from './CustomInput'
 import { Loader2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { signIn, signUp } from '@/lib/actions/users.actions'
+import PlaidLink from './PlaidLink'
 
 const formSchema = z.object({
     email: z.string().email(),
@@ -50,7 +51,19 @@ const AuthForm = ({ type }: { type: string }) => {
         setIsLoading(true);
         try {
             if (type === 'sign-up') {
-                const newUser = await signUp(data);
+                const userData = {
+                    firstName: data.firstName!,
+                    lastName: data.lastName!,
+                    address1: data.address1!,
+                    city: data.city!,
+                    state: data.state!,
+                    postalCode: data.postalCode!,
+                    dateOfBirth: data.dateOfBirth!,
+                    ssn: data.ssn!,
+                    email: data.email,
+                    password: data.password
+                }
+                const newUser = await signUp(userData);
 
                 setUser(newUser);
             }
@@ -87,7 +100,7 @@ const AuthForm = ({ type }: { type: string }) => {
             </header>
             {user ? (
                 <div className='flex flec-col gap-4'>
-                    {/* <Link></Link> */}
+                    <PlaidLink user={user} variant="primary" />
                 </div>
             ) :
                 <>
@@ -107,7 +120,7 @@ const AuthForm = ({ type }: { type: string }) => {
                                     </div>
                                     <div className='flex gap-4'>
                                         <CustomInput control={form.control} label='Date of Birth' name='dateOfBirth' placeholder='YYYY-MM-DD' />
-                                        <CustomInput control={form.control} label='Aadhar No.' name='aadharNo' placeholder='Example: 1234' />
+                                        <CustomInput control={form.control} label='SSN' name='ssn' placeholder='Example: 1234' />
                                     </div>
                                 </>
                             )}
